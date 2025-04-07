@@ -1,0 +1,21 @@
+/* Container div takes up the full width and height of its parent */
+.container {
+    display: flex;
+    width: 100%;
+    cheight: calc(100vh - 16px);
+    overflow: hidden;
+}
+
+/* The first child div takes up 80% width and 100% height */
+.chartDiv {
+    width: calc(100% - 180px);
+    height: calc(100vh - 16px);
+    background-color:  lightblue; /* Optional, for visibility */
+}
+
+/* The second child div takes up 20% width and 100% height */
+.infoDiv {
+    width: 180px;
+    height: calc(100vh - 16px);
+    background-color: lightcoral; /* Optional, for visibility */
+}
