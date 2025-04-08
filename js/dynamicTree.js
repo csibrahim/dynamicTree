@@ -112,7 +112,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
     const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id((d) => d.data.name))
         .force("radial", d3.forceRadial(d => d.depth * (width/2), width / 2, height / 2))
-        .force("collide", d3.forceCollide().radius((d) => getRadius(d) * 5).strength(1).iterations(6))
+        .force("collide", d3.forceCollide().radius((d) => getRadius(d) * 3).strength(1).iterations(6))
 
     const getLinkId = (link, linkType) => typeof link[linkType] === "string" ? link[linkType] : link[linkType].data.name;
 
@@ -143,7 +143,13 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
         linksGroup
             .select(".linkLine")
             .attr("stroke-width",props.links.strokeWidth)
-            .attr("stroke", props.links.stroke);
+            .attr("stroke", props.links.stroke)
+            .attr("opacity",0)
+            .interrupt()
+            .transition()
+            .duration((d) => d.target.expanded ? 500 : 0)
+            .attr("opacity",1);
+        ;
 
         const nodesGroup = nodeGroup
             .selectAll(".nodesGroup")
@@ -175,12 +181,16 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             if(!d.children  && d.data._children){
                 d.children = d.data._children;
                 d.data._children = undefined;
+                d.children.map((m) => {
+                    m.expanded = true
+                });
             } else if (d.children !== undefined){
                 d.data._children = d.children;
                 d.children = undefined;
             }
             drawTree();
         })
+
 
         nodesGroup
             .select(".nodeBackgroundCircle")
@@ -196,6 +206,12 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             .attr("fill", (d) => d.depth === 0 ? "#A0A0A0" : colorScale(colorVar === colorAttributes[0] ? d.data.defaultColor : d.data[colorVar]))
             .attr("stroke", props.nodes.stroke)
             .attr("stroke-width", 0)
+            .interrupt()
+            .attr("opacity",0)
+            .transition()
+            .duration((d) => d.expanded ? 500 : 0)
+            .attr("opacity",1);
+
 
         nodesGroup
             .select(".nodeCircleOutline")
@@ -224,7 +240,14 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             .attr("dx", 0)
             .attr("dy", (d) => props.label.fontSize + getRadius(d))
             .attr("text-anchor", "middle")
-            .text((d) =>d.data.label);
+            .text((d) =>d.data.label)
+            .attr("opacity",0)
+            .interrupt()
+            .transition()
+            .delay((d) => d.expanded ? 200 : 0)
+            .duration((d) => d.expanded ? 500 : 0)
+            .attr("opacity",1);
+        ;
 
         const nodePiesGroup = nodesGroup.select(".nodePieGroup")
             .selectAll(".nodePiesGroup")
@@ -269,10 +292,10 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             d3.drag().on("start", dragstarted).on("drag", dragged).on("end", dragended)
         );
 
+        nodes.map((m) => m.expanded = false);
         simulation.nodes(nodes);
         simulation.force("link").links(chartLinks);
         simulation.alpha(1).restart();
-
         simulation.on("tick", () => {
             svg
                 .selectAll(".linkLine")
@@ -281,7 +304,9 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
                 .attr("y1", (d) => d.source.y)
                 .attr("y2", (d) => d.target.y);
 
-            nodesGroup.attr("transform", (d) => `translate(${d.x},${d.y})`);
+            nodesGroup
+                .attr("transform", (d) => `translate(${d.x},${d.y})`);
+
         })
 
         zoomToBounds(nodes, baseSvg,width,height,zoom);
