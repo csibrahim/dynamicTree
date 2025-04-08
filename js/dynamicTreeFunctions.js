@@ -182,8 +182,8 @@ const getTooltipHtml = (d, colorVar, colorScale, defaultColor) => {
                 })
                 tooltipHTML += "</td></tr>"
             } else {
-
-                tooltipHTML += `<tr><td class="cellLeft"><strong>${k.toUpperCase()}</strong></td><td class="cellRight">${d.data[k]}</td></tr>`
+                const rowColor = k === colorVar  && !defaultColor ? colorScale(d.data[k]) : "#484848";
+                tooltipHTML += `<tr style="color:${rowColor};"><td class="cellLeft"><strong>${k.toUpperCase()}</strong></td><td class="cellRight">${d.data[k]}</td></tr>`
             }
 
         }

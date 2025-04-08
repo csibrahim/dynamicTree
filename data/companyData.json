@@ -677,7 +677,7 @@
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Male",
-        "salary": 85000
+        "salary": 25000
       }
     },
     {
@@ -691,7 +691,7 @@
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Female",
-        "salary": 103000
+        "salary": 143000
       }
     },
     {
@@ -789,7 +789,7 @@
         "nodetype": "employee",
         "degree": "Masters",
         "gender": "Male",
-        "salary": 105000
+        "salary": 25000
       }
     },
     {
@@ -803,7 +803,7 @@
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Female",
-        "salary": 90000
+        "salary": 140000
       }
     },
     {

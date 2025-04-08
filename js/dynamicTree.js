@@ -2,8 +2,8 @@
 const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttributes, colorAttributes) => {
 
     const props = {
-        defaultRadius: 5,
-        radiusRange: [5,40],
+        defaultRadius: 7,
+        radiusRange: [7,40],
         links: {strokeWidth: 1, stroke:"#A0A0A0"},
         nodes: {strokeWidth: 0.5,stroke: "#484848"},
         label: {fill:"#484848",fontSize:10}
@@ -106,20 +106,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             radiusVar = value;
             radiusExtent = d3.extent(nodeHierarchy.descendants(), (d) => d.data[radiusVar]);
             radiusScale.domain(radiusExtent);
-            svg.selectAll(".nodeCircle")
-                .transition()
-                .duration(400)
-                .attr("r", getRadius);
-
-            svg.selectAll(".nodeLabel")
-                .transition()
-                .duration(400)
-                .attr("dy", (d) => props.label.fontSize + getRadius(d));
-
-            svg.selectAll(".nodeLabelBackground")
-                .transition()
-                .duration(400)
-                .attr("y",(d) =>  getRadius(d) + 1.5);
+            drawTree();
         });
 
     const simulation = d3.forceSimulation()
@@ -163,6 +150,8 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             .data(nodes, (d) => d.data.key)
             .join((group) => {
                 const enter = group.append("g").attr("class", "nodesGroup");
+                enter.append("circle").attr("class", "nodeBackgroundCircle");
+                enter.append("circle").attr("class", "nodeCircleOutline");
                 enter.append("circle").attr("class", "nodeCircle");
                 enter.append("rect").attr("class","nodeLabelBackground")
                 enter.append("text").attr("class", "nodeLabel");
@@ -194,11 +183,29 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
         })
 
         nodesGroup
+            .select(".nodeBackgroundCircle")
+            .attr("pointer-events","none")
+            .attr("r",  (d) => d.children ? 1 + getRadius(d) * 1.25 : getRadius(d))
+            .attr("fill", "white")
+            .attr("stroke-width", 0)
+
+
+        nodesGroup
             .select(".nodeCircle")
             .attr("r", getRadius)
-            .attr("fill", (d) => d.depth === 0 || (d.depth === 3 && colorVar !== colorAttributes[0])? "#A0A0A0" : colorScale(d.data.defaultColor))
+            .attr("fill", (d) => d.depth === 0 ? "#A0A0A0" : colorScale(colorVar === colorAttributes[0] ? d.data.defaultColor : d.data[colorVar]))
             .attr("stroke", props.nodes.stroke)
-            .attr("stroke-width", props.nodes.strokeWidth)
+            .attr("stroke-width", 0)
+
+        nodesGroup
+            .select(".nodeCircleOutline")
+            .attr("pointer-events","none")
+            .attr("r",(d) =>  getRadius(d) * 1.25)
+            .attr("stroke", (d) => d.depth === 0 ? "#A0A0A0" : colorScale(colorVar === colorAttributes[0] ? d.data.defaultColor : d.data[colorVar]))
+            .attr("fill", "none")
+            .attr("stroke-dasharray", "2,1")
+            .attr("stroke-width", (d) => d.children ? 1 : 0)
+
 
         nodesGroup
             .select(".nodeLabelBackground")
