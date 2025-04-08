@@ -6,7 +6,6 @@ body, svg {
 #container {
     display: flex;
     width: 100%;
-    min-width: 800px;
     height: calc(100vh - 16px);
     overflow: hidden;
 }
