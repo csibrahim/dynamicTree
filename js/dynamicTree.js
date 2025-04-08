@@ -192,7 +192,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
         nodesGroup
             .select(".nodeCircle")
             .attr("r", getRadius)
-            .attr("fill", (d) => d.depth === 0 ? "#A0A0A0" : colorScale(d.data.defaultColor))
+            .attr("fill", (d) => d.depth === 0 || (d.depth === 3 && colorVar !== colorAttributes[0])? "#A0A0A0" : colorScale(d.data.defaultColor))
             .attr("stroke", props.nodes.stroke)
             .attr("stroke-width", props.nodes.strokeWidth)
 
