@@ -3,16 +3,45 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="css/dynamicTree.css"/>
-     <script src="https://d3js.org/d3.v6.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:ital@0;1&display=swap">
+    <script src="https://d3js.org/d3.v6.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="js/dynamicTreeFunctions.js"></script>
     <script type="text/javascript" src="js/dynamicTree.js"></script>
 
     <title>Dynamic Tree</title>
 </head>
 <body>
-<div class="container">
-    <div class="chartDiv"></div>
-    <div class="infoDiv"></div>
+<div id="container">
+    <div id="chartDiv"></div>
+    <div id="infoDiv">
+        <div class="selectDiv">Radius attribute<select class="radiusSelect"></select></div>
+        <div class="selectDiv">Color attribute<select class="colorSelect"></select></div>
+        <br><br>
+        <div id="tooltipDiv"></div>
+    </div>
 </div>
+<script>
 
+    const getChartData = async () => {
+        const data = await d3.json("data/companyData.json");
+        return data;
+    }
+
+    const loadChart = async () => {
+        const chartData = await getChartData();
+        const nodeSpecificAttributes = ["nodetype","label"];
+        const defaultColorVar = "label";
+        // attributes which apply to specific node and should not be aggregated or used when switching radius + color
+        const {nodeHierarchy, links, colorAttributes, radiusAttributes} = formatData(chartData,nodeSpecificAttributes, defaultColorVar);
+
+        // default color must always be 1st on the list
+        const allColorAttributes = [nodeHierarchy.find((f) => f.depth === 1).data.nodetype].concat(colorAttributes)
+        drawDynamicTree("chartDiv", "tooltipDiv", nodeHierarchy, links,radiusAttributes, allColorAttributes);
+    };
+
+    loadChart();
+
+
+</script>
 </body>
 </html>

@@ -1,21 +1,52 @@
+body, svg {
+    font-family: 'Figtree', serif;
+
+}
 /* Container div takes up the full width and height of its parent */
-.container {
+#container {
     display: flex;
     width: 100%;
-    cheight: calc(100vh - 16px);
+    min-width: 800px;
+    height: calc(100vh - 16px);
     overflow: hidden;
 }
 
-/* The first child div takes up 80% width and 100% height */
-.chartDiv {
-    width: calc(100% - 180px);
+/* The first child div takes up 100% width - 180px and 100% height */
+#chartDiv {
+    width: calc(100% - 240px);
     height: calc(100vh - 16px);
-    background-color:  lightblue; /* Optional, for visibility */
 }
 
-/* The second child div takes up 20% width and 100% height */
-.infoDiv {
-    width: 180px;
+/* The second child div takes up 180px width and 100% height */
+#infoDiv {
+    width: 240px;
     height: calc(100vh - 16px);
-    background-color: lightcoral; /* Optional, for visibility */
+    background-color: #F0F0F0; /* Optional, for visibility */
+}
+select {
+    text-align: right;
+}
+.selectDiv {
+    padding: 5px;
+    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#tooltipDiv{
+    visibility: hidden;
+    background-color: white;
+    font-size: 12px;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+.cellRight{
+    text-align: right;
+}
+
+.cellLeft{
+    text-align: left;
 }
