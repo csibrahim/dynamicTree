@@ -234,6 +234,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
                 .attr("fill",(d) => colorScale(d.type))
                 .attr("d", (d) => d.path)
 
+        
         const dragstarted = (event, d) => {
             if(d.depth > 0) {
                 fixNodes(nodes);
