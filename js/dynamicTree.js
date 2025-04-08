@@ -120,8 +120,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
                 .transition()
                 .duration(400)
                 .attr("y",(d) =>  getRadius(d) + 1.5);
-        })
-
+        });
 
     const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id((d) => d.data.name))
