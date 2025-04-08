@@ -658,7 +658,7 @@
         "label": "Samantha Mitchell",
         "x": -277.40414,
         "y": -80.357056,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Masters",
@@ -672,7 +672,7 @@
         "label": "Jason Roberts",
         "x": -264.69263,
         "y": -106.423164,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Bachelor",
@@ -686,12 +686,12 @@
         "label": "Rebecca King",
         "x": -258.16412,
         "y": -59.7229,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Female",
-        "salary": 83000
+        "salary": 103000
       }
     },
     {
@@ -700,12 +700,12 @@
         "label": "Jonathan Baker",
         "x": -249.89468,
         "y": -129.23422,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "PhD",
         "gender": "Male",
-        "salary": 115000
+        "salary": 145000
       }
     },
     {
@@ -714,12 +714,12 @@
         "label": "Megan Hill",
         "x": -199.32849,
         "y": -72.70915,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Masters",
         "gender": "Female",
-        "salary": 95000
+        "salary": 125000
       }
     },
     {
@@ -728,12 +728,12 @@
         "label": "Adam Wood",
         "x": -228.57912,
         "y": -51.39562,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Male",
-        "salary": 84000
+        "salary": 124000
       }
     },
     {
@@ -742,12 +742,12 @@
         "label": "Nicole Reed",
         "x": -199.66096,
         "y": -105.39583,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Masters",
         "gender": "Female",
-        "salary": 92000
+        "salary": 122000
       }
     },
     {
@@ -756,12 +756,12 @@
         "label": "Justin Cook",
         "x": -221.3006,
         "y": -122.97291,
-        "size": 10.0,
+        "size": 1,
         "color": "#ee7993",
         "nodetype": "employee",
         "degree": "Bachelor",
         "gender": "Male",
-        "salary": 86000
+        "salary": 126000
       }
     },
     {

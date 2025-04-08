@@ -114,7 +114,12 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             svg.selectAll(".nodeLabel")
                 .transition()
                 .duration(400)
-                .attr("dy", (d) => props.label.fontSize + getRadius(d))
+                .attr("dy", (d) => props.label.fontSize + getRadius(d));
+
+            svg.selectAll(".nodeLabelBackground")
+                .transition()
+                .duration(400)
+                .attr("y",(d) =>  getRadius(d) + 1.5);
         })
 
 
@@ -234,7 +239,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
                 .attr("fill",(d) => colorScale(d.type))
                 .attr("d", (d) => d.path)
 
-        
+
         const dragstarted = (event, d) => {
             if(d.depth > 0) {
                 fixNodes(nodes);
