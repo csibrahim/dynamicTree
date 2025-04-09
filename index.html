@@ -46,7 +46,6 @@
         // attributes which apply to specific node and should not be aggregated or used when switching radius + color
         const {nodeHierarchy, links, colorAttributes, radiusAttributes} = formatData(chartData,nodeSpecificAttributes, defaultColorVar);
 
-        debugger;
         // default color must always be 1st on the list
         const allColorAttributes = [nodeHierarchy.find((f) => f.depth === 1).data.nodetype].concat(colorAttributes)
         drawDynamicTree("chartDiv", "tooltipDiv", nodeHierarchy, links,radiusAttributes, allColorAttributes);

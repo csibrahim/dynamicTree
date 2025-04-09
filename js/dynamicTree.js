@@ -297,6 +297,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
         simulation.nodes(nodes);
         simulation.force("link").links(chartLinks);
         simulation.alpha(1).restart();
+        let tickCount = 0;
         simulation.on("tick", () => {
             svg
                 .selectAll(".linkLine")
@@ -307,11 +308,12 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
 
             nodesGroup
                 .attr("transform", (d) => `translate(${d.x},${d.y})`);
+            tickCount += 1;
+            if(tickCount === 25){
+                zoomToBounds(nodes, baseSvg,width,height,zoom);
+            }
 
         })
-
-        zoomToBounds(nodes, baseSvg,width,height,zoom);
-
 
     }
 

@@ -227,9 +227,8 @@ const zoomToBounds = (currentNodes, baseSvg, width, height,zoom) => {
         let translateX =  -(xExtent0 + xExtent1) / 2;
         let translateY =  -(yExtent0 + yExtent1) / 2;
 
-        const fitToScale = 0.95 / Math.max(xWidth / width, yWidth / height);
-
-        if(fitToScale < 1.2){
+        const fitToScale = 0.8 / Math.max(xWidth / width, yWidth / height);
+        console.log(translateX, translateY, width/2, height/2);
 
             baseSvg
                 .interrupt()
@@ -239,10 +238,9 @@ const zoomToBounds = (currentNodes, baseSvg, width, height,zoom) => {
                     zoom.transform,
                     d3.zoomIdentity
                         .translate(width / 2, height / 2)
-                        .scale(fitToScale)
-                        .translate(translateX, translateY),
+                        .scale(fitToScale > 1 ? 1 : fitToScale)
+                        .translate(fitToScale > 1 ? -width/2 : translateX, fitToScale > 1 ? -height/2 : translateY),
                 );
-        }
 
 
     }
