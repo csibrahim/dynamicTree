@@ -24,10 +24,9 @@
 
     const getChartData = async () => {
         const requiredFields = ["label","nodetype"];
-        const data = await d3.json("data/companyData2.json");
+        const data = await d3.json("data/companyData.json");
         if(data.length >0){
 
-            const keys = Object.keys(data[0]);
             requiredFields.forEach((r) => {
                 data.forEach((d) => {
                     if(!d[r]){
