@@ -42,10 +42,27 @@ select {
     text-align: center;
 }
 
+.tooltipTableContainer{
+    max-height: 150px;
+    height: 14px;
+    overflow-y: auto;
+    width: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+.tooltipTable{
+    border-collapse: collapse;
+}
 .cellRight{
     text-align: right;
+    word-wrap: break-word; /* Ensures text wraps within cells */
+    overflow-wrap: break-word;
+
 }
 
 .cellLeft{
     text-align: left;
+    word-wrap: break-word; /* Ensures text wraps within cells */
+    overflow-wrap: break-word;
 }
+

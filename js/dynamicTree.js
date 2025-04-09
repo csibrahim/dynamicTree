@@ -111,7 +111,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
 
     const simulation = d3.forceSimulation()
         .force("link", d3.forceLink().id((d) => d.data.name))
-        .force("radial", d3.forceRadial(d => d.depth * (width/2), width / 2, height / 2))
+        .force("radial", d3.forceRadial(d => d.depth * (width/3), width / 2, height / 2).strength(0.4))
         .force("collide", d3.forceCollide().radius((d) => getRadius(d) * 3).strength(1).iterations(6))
 
     const getLinkId = (link, linkType) => typeof link[linkType] === "string" ? link[linkType] : link[linkType].data.name;
@@ -165,20 +165,21 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
                 return enter;
             });
 
-        nodesGroup
-            .attr("cursor","pointer")
-            .on("mouseover", (event,d) => {
-                d3.select(`#${tooltipId}`)
-                    .style("visibility", "visible")
-                    .html(getTooltipHtml(d,colorVar, colorScale, d.depth > 0 && colorVar === colorAttributes[0]))
-            })
-            .on("mouseout", () => {
+        baseSvg.on("click",(event) => {
+            if(event.srcElement.tagName === "svg"){
                 d3.select(`#${tooltipId}`)
                     .style("visibility", "hidden")
                     .html("")
-            })
+            }
+        })
+        nodesGroup
+            .attr("cursor","pointer")
             .on("click", (event, d) => {
-            if(!d.children  && d.data._children){
+                d3.select(`#${tooltipId}`)
+                    .style("visibility", "visible")
+                    .html(getTooltipHtml(d,colorVar, colorScale, d.depth > 0 && colorVar === colorAttributes[0]))
+
+                if(!d.children  && d.data._children){
                 d.children = d.data._children;
                 d.data._children = undefined;
                 d.children.map((m) => {
@@ -216,11 +217,11 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
         nodesGroup
             .select(".nodeCircleOutline")
             .attr("pointer-events","none")
-            .attr("r",(d) =>  getRadius(d) * 1.25)
+            .attr("r",(d) =>  getRadius(d) + 3)
             .attr("stroke", (d) => d.depth === 0 ? "#A0A0A0" : colorScale(colorVar === colorAttributes[0] ? d.data.defaultColor : d.data[colorVar]))
             .attr("fill", "none")
             .attr("stroke-dasharray", "2,1")
-            .attr("stroke-width", (d) => d.children ? 1 : 0)
+            .attr("stroke-width", (d) => d.children || d.data._children ? 1 : 0)
 
 
         nodesGroup
@@ -228,7 +229,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             .attr("width", (d) => measureWidth(d.data.label,props.label.fontSize) + 2)
             .attr("height", props.label.fontSize)
             .attr("x",(d) => -measureWidth(d.data.label,props.label.fontSize)/2 - 1)
-            .attr("y",(d) =>  getRadius(d) + 1.5)
+            .attr("y",(d) =>  getRadius(d) + 1.5 + (d.children || d.data._children ? 3 : 0))
             .attr("rx",3)
             .attr("ry",3)
             .attr("fill","white");
@@ -238,7 +239,7 @@ const drawDynamicTree =  (divId, tooltipId, nodeHierarchy, links, radiusAttribut
             .attr("fill", props.label.fill)
             .attr("font-size",props.label.fontSize)
             .attr("dx", 0)
-            .attr("dy", (d) => props.label.fontSize + getRadius(d))
+            .attr("dy", (d) => props.label.fontSize + getRadius(d) + (d.children || d.data._children ? 3 : 0))
             .attr("text-anchor", "middle")
             .text((d) =>d.data.label)
             .attr("opacity",0)

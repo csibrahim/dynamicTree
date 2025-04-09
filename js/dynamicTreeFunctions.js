@@ -84,15 +84,18 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
     // group descendants by depth
     const descendantsByDepth = d3.group(hierarchy.descendants(), (g) => g.depth);
     // add data for final level leaf nodes
-    const bottomLevelNodes = descendantsByDepth.get(3);
-    bottomLevelNodes.map((m) => {
-        m.data = getNodeData(m.data.name);
-    })
+   // const bottomLevelNodes = descendantsByDepth.get(3);
+   // bottomLevelNodes.map((m) => {
+   //     m.data = getNodeData(m.data.name);
+  //  })
 
     const radiusAttributes = new Set();
     const colorAttributes = new Set();
     // aggregation for parent nodes
     const getNodeTotals = (nodeName, nodeChildren) => {
+        if(!nodeChildren){
+            return getNodeData(nodeName);
+        }
         const newNode = {name: nodeName};
         nodeAttributes.forEach((n) =>  {
             if(nodeSpecificAttributes.includes(n)){
@@ -146,8 +149,9 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
         return newNode
     }
 
+    const maxDepth = d3.max(hierarchy.descendants(), (d) => d.depth);
     // loop down through parent nodes and aggregate at each level;
-    for (let i = 2; i >= 0 ; i--){
+    for (let i = maxDepth; i >= 0 ; i--){
         const levelNodes = descendantsByDepth.get(i);
         levelNodes.map((m) => {
             m.data = getNodeTotals(m.data.name, m.children);
@@ -193,19 +197,19 @@ const measureWidth = (text, fontSize) => {
 
 const getTooltipHtml = (d, colorVar, colorScale, defaultColor) => {
     const excludedKeys = ["label","defaultColor","_children","children","name"];
-    let tooltipHTML = `<span style="font-size: 18px; color:${defaultColor ? colorScale(d.data.defaultColor) : "#484848"};"><strong>${d.data.label.toUpperCase()}</strong></span><br><br><table style="width:100%;">`;
+    let tooltipHTML = `<span style="font-size: 18px; color:${defaultColor ? colorScale(d.data.defaultColor) : "#484848"};"><strong>${d.data.label.toUpperCase()}</strong></span><br><br>`;
     Object.keys(d.data).forEach((k) => {
         if(!excludedKeys.includes(k)){
             if(typeof d.data[k] === "object"){
-                tooltipHTML +=  `<tr><td class="cellLeft"><strong>${k.toUpperCase()} </strong></td><td class="cellRight">`
+                tooltipHTML +=  `<div class="tooltipTableContainer"></div><table class="tooltipTable" style="width:100%;"><tr><td class="cellLeft"><strong>${k.toUpperCase()} </strong></td><td class="cellRight">`
                 d.data[k].forEach((e) => {
-
-                    tooltipHTML += `<span style="color:${k === colorVar ? colorScale(e.type) : "#484848"}">${e.type}: ${e.count}</span><br>`
+                    tooltipHTML += `<span style="color:${k === colorVar ? colorScale(e.type) : "#484848"}">${e.type.substr(0,50)}: ${e.count}</span><br>`
                 })
-                tooltipHTML += "</td></tr>"
+                tooltipHTML += "</td></tr></table></div>"
             } else {
+
                 const rowColor = k === colorVar  && !defaultColor ? colorScale(d.data[k]) : "#484848";
-                tooltipHTML += `<tr style="color:${rowColor};"><td class="cellLeft"><strong>${k.toUpperCase()}</strong></td><td class="cellRight">${d.data[k]}</td></tr>`
+                tooltipHTML += `<div class="tooltipTableContainer"><table class="tooltipTable" style="width:100%;"><tr style="color:${rowColor};"><td class="cellLeft"><strong>${k.toUpperCase()}</strong></td><td class="cellRight">${d.data[k]}</td></tr></table></div>`
             }
 
         }
