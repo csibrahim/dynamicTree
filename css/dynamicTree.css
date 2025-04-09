@@ -12,13 +12,13 @@ body, svg {
 
 /* The first child div takes up 100% width - 180px and 100% height */
 #chartDiv {
-    width: calc(100% - 240px);
+    width: 70%;
     height: calc(100vh - 16px);
 }
 
 /* The second child div takes up 180px width and 100% height */
 #infoDiv {
-    width: 240px;
+    width: 30%;
     height: calc(100vh - 16px);
     background-color: #F0F0F0; /* Optional, for visibility */
 }

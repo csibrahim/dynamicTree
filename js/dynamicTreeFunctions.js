@@ -11,12 +11,34 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
         .filter((f) => f !== "color"  && f !== "x" && f !== "y");
 
 
+
     // root = only node with no target
-    const root = chartData.nodes.filter((f) => !chartData.edges.some((s) => s.target === f.key));
+    let root = chartData.nodes.filter((f) => !chartData.edges.some((s) => s.target === f.key));
+
     if(root.length > 1){
+        chartData.nodes.push({
+            "key": "root",
+            "attributes": {
+                "label": "root",
+                "size": 0,
+                "0": "root",
+                "1":"",
+                "2": 0,
+                "3": 0,
+                "4": 0
+            }
+        })
+        root.forEach((d) => {
+            chartData.edges.push({
+                source: "root",
+                target: d.key
+            })
+        })
+        root = chartData.nodes.filter((f) => f.key === "root");
+
         // if more than one root = invalid data, returning nothing
-        console.error('Data Error: more than one root');
-        return {nodes: [],links:[]};
+        //console.error('Data Error: more than one root');
+       // return {nodes: [],links:[]};
     }
 
     // building the hierarchy
