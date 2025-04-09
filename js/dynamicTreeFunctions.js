@@ -10,12 +10,11 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
     const nodeAttributes = Object.keys(chartData.nodes[0].attributes)
         .filter((f) => f !== "color"  && f !== "x" && f !== "y");
 
-
-
     // root = only node with no target
     let root = chartData.nodes.filter((f) => !chartData.edges.some((s) => s.target === f.key));
 
     if(root.length > 1){
+        // if there is more than one root - generate a root
         chartData.nodes.push({
             "key": "root",
             "attributes": {
@@ -36,9 +35,6 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
         })
         root = chartData.nodes.filter((f) => f.key === "root");
 
-        // if more than one root = invalid data, returning nothing
-        //console.error('Data Error: more than one root');
-       // return {nodes: [],links:[]};
     }
 
     // building the hierarchy
@@ -83,17 +79,13 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
 
     // group descendants by depth
     const descendantsByDepth = d3.group(hierarchy.descendants(), (g) => g.depth);
-    // add data for final level leaf nodes
-   // const bottomLevelNodes = descendantsByDepth.get(3);
-   // bottomLevelNodes.map((m) => {
-   //     m.data = getNodeData(m.data.name);
-  //  })
 
     const radiusAttributes = new Set();
     const colorAttributes = new Set();
     // aggregation for parent nodes
     const getNodeTotals = (nodeName, nodeChildren) => {
         if(!nodeChildren){
+            // final leaf only
             return getNodeData(nodeName);
         }
         const newNode = {name: nodeName};
@@ -170,25 +162,17 @@ const formatData = (chartData,nodeSpecificAttributes, defaultColorVar) => {
         }
     })
 
-    // now calculations are complete, pass back nodes and links
-    const nodes = hierarchy.descendants().reduce((acc, node) => {
-        const newNode = {};
-        Object.keys(node.data).forEach((k) => newNode[k] = node.data[k]);
-        acc.push(newNode);
-        return acc;
-    },[]);
-
     const links = chartData.edges.reduce((acc, edge) => {
         acc.push({key: edge.key, source: edge.source, target: edge.target})
         return acc;
     },[])
-
 
     return {nodeHierarchy: hierarchy, links, colorAttributes: Array.from(colorAttributes), radiusAttributes: Array.from(radiusAttributes)};
 
 }
 
 const measureWidth = (text, fontSize) => {
+    // for the background label rect
     const context = document.createElement("canvas").getContext("2d");
     context.font = `${fontSize}px Arial`;
     return context.measureText(text).width;
@@ -197,9 +181,12 @@ const measureWidth = (text, fontSize) => {
 
 const getTooltipHtml = (d, colorVar, colorScale, defaultColor) => {
     const excludedKeys = ["label","defaultColor","_children","children","name"];
+    // header
     let tooltipHTML = `<span style="font-size: 18px; color:${defaultColor ? colorScale(d.data.defaultColor) : "#484848"};"><strong>${d.data.label.toUpperCase()}</strong></span><br><br>`;
+
     Object.keys(d.data).forEach((k) => {
         if(!excludedKeys.includes(k)){
+            // arrays are groups of data with numbers - these have a row for each one
             if(typeof d.data[k] === "object"){
                 tooltipHTML +=  `<div class="tooltipTableContainer"></div><table class="tooltipTable" style="width:100%;"><tr><td class="cellLeft"><strong>${k.toUpperCase()} </strong></td><td class="cellRight">`
                 d.data[k].forEach((e) => {
@@ -207,7 +194,7 @@ const getTooltipHtml = (d, colorVar, colorScale, defaultColor) => {
                 })
                 tooltipHTML += "</td></tr></table></div>"
             } else {
-
+            // strings get a single row
                 const rowColor = k === colorVar  && !defaultColor ? colorScale(d.data[k]) : "#484848";
                 tooltipHTML += `<div class="tooltipTableContainer"><table class="tooltipTable" style="width:100%;"><tr style="color:${rowColor};"><td class="cellLeft"><strong>${k.toUpperCase()}</strong></td><td class="cellRight">${d.data[k]}</td></tr></table></div>`
             }
@@ -219,16 +206,16 @@ const getTooltipHtml = (d, colorVar, colorScale, defaultColor) => {
 }
 
 const zoomToBounds = (currentNodes, baseSvg, width, height,zoom) => {
+    // get zoom extent and fit to scale
     const [xExtent0, xExtent1] = d3.extent(currentNodes, (d) => d.fx || d.x);
     const [yExtent0, yExtent1] = d3.extent(currentNodes, (d) => d.fy || d.y);
     if (xExtent0 && xExtent1 && yExtent0 && yExtent1) {
-        let xWidth = xExtent1 - xExtent0 + 40;
-        let yWidth = yExtent1 - yExtent0 + 40;
+        let xWidth = xExtent1 - xExtent0 ;
+        let yWidth = yExtent1 - yExtent0;
         let translateX =  -(xExtent0 + xExtent1) / 2;
         let translateY =  -(yExtent0 + yExtent1) / 2;
 
         const fitToScale = 0.8 / Math.max(xWidth / width, yWidth / height);
-        console.log(translateX, translateY, width/2, height/2);
 
             baseSvg
                 .interrupt()
@@ -241,7 +228,5 @@ const zoomToBounds = (currentNodes, baseSvg, width, height,zoom) => {
                         .scale(fitToScale > 1 ? 1 : fitToScale)
                         .translate(fitToScale > 1 ? -width/2 : translateX, fitToScale > 1 ? -height/2 : translateY),
                 );
-
-
     }
 }

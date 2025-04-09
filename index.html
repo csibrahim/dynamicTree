@@ -23,11 +23,12 @@
 <script>
 
     const getChartData = async () => {
+        // required fields + default values
         const requiredFields = ["label","nodetype","size"];
         const requiredFieldDefaults = ["","",1]
         const data = await d3.json("data/companyData2.json");
         if(data.length >0){
-
+            // makes sure all required fields exist and have values
             requiredFields.forEach((r,i) => {
                 data.forEach((d) => {
                     if(!d[r]){
@@ -42,8 +43,14 @@
     const loadChart = async () => {
         const chartData = await getChartData();
         const nodeSpecificAttributes = ["nodetype","label"];
-        const defaultColorVar = "label";
-        // attributes which apply to specific node and should not be aggregated or used when switching radius + color
+        const defaultColorVar = "label"; // default colour is label in the 1st level nodes - can be changed
+
+        // formatData will return
+        // list of nodes + links
+        // colorAttributes -  used for colorPies
+        // radiusAttributes -  used for radius size
+        // adding any additional string (color) or number (radius) attributes to your gephi dataset
+        // should automatically add them to the list AND aggregate them in the data
         const {nodeHierarchy, links, colorAttributes, radiusAttributes} = formatData(chartData,nodeSpecificAttributes, defaultColorVar);
 
         // default color must always be 1st on the list
