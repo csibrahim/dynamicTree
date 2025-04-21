@@ -26,7 +26,7 @@
         // required fields + default values
         const requiredFields = ["label","nodetype","size"];
         const requiredFieldDefaults = ["","",1]
-        const data = await d3.json("data/companyData2.json");
+        const data = await d3.json("data/companyData.json");
         if(data.length >0){
             // makes sure all required fields exist and have values
             requiredFields.forEach((r,i) => {
